@@ -1,9 +1,9 @@
 import express from 'express';
-import { handleGetAllContacts } from '../controllers/contactsController.js';
+import { handleGetAllContacts, handleGetContactById } from '../controllers/contactsController.js';
 
 const router = express.Router();
 
-// GET /contacts
 router.get('/', handleGetAllContacts);
+router.get('/:contactId', handleGetContactById);
 
 export default router;
