@@ -1,6 +1,6 @@
-const express = require('express');
-const cors = require('cors');
-const pino = require('pino-http')();
+import express from 'express';
+import cors from 'cors';
+import pino from 'pino-http';
  
 
 function setupServer() {
@@ -21,4 +21,4 @@ function setupServer() {
 });
 }
 
-module.exports = { setupServer };
+export { setupServer };
