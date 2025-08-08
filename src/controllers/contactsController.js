@@ -1,5 +1,5 @@
-import { getAllContacts, getContactById } from '../services/contacts.js';
-import { seedContactsInDB } from '../services/contacts.js';
+import { getContactById } from '../services/contacts.js';
+import { getAllContacts } from "../repositories/contactsRepository.js";
 
 export const handleGetAllContacts = async (req, res, next) => {
   try {
@@ -34,15 +34,3 @@ export const handleGetContactById = async (req, res, next) => {
 };
 
 
-export const seedContacts = async (req, res, next) => {
-  try {
-    const contacts = await seedContactsInDB();
-    res.status(201).json({
-      status: 201,
-      message: 'Seeded test contacts successfully!',
-      data: contacts,
-    });
-  } catch (error) {
-    next(error);
-  }
-};

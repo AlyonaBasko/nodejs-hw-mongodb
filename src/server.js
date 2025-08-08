@@ -11,7 +11,7 @@ function setupServer() {
   app.use(pino());
   app.use(express.json());
 
-  // ✅ Роут для /contacts
+ 
   app.use('/contacts', contactsRouter);
 
   app.use((req, res) => {
