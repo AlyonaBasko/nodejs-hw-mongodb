@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-config(); // зчитує .env
+config(); 
 
 import { initMongoConnection } from './db/initMongoConnection.js';
 import { setupServer } from './server.js';
