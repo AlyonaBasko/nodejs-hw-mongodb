@@ -3,7 +3,7 @@ import {
   handleGetAllContacts,
   handleGetContactById,
   handleCreateContact,
-  handleUpdateContact,
+  handlePatchContact, 
   handleDeleteContact,
 } from '../controllers/contacts.js';
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
@@ -13,7 +13,7 @@ const router = express.Router();
 router.get('/', ctrlWrapper(handleGetAllContacts));
 router.get('/:contactId', ctrlWrapper(handleGetContactById));
 router.post('/', ctrlWrapper(handleCreateContact));
-router.put('/:contactId', ctrlWrapper(handleUpdateContact));
+router.patch('/:contactId', ctrlWrapper(handlePatchContact));
 router.delete('/:contactId', ctrlWrapper(handleDeleteContact));
 
 export default router;

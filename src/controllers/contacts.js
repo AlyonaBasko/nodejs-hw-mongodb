@@ -2,7 +2,7 @@ import {
   getAllContacts,
   getContactById,
   createContact,
-  updateContact,
+  patchContact,
   deleteContact,
 } from '../services/contacts.js';
 import createError from 'http-errors';
@@ -44,10 +44,17 @@ export const handleGetContactById = async (req, res, next) => {
 // POST /contacts
 export const handleCreateContact = async (req, res, next) => {
   try {
+    const { name, phoneNumber, contactType } = req.body;
+
+    if (!name || !phoneNumber || !contactType) {
+      throw createError(400, "Missing required fields: name, phoneNumber, contactType");
+    }
+
     const newContact = await createContact(req.body);
+
     res.status(201).json({
       status: 201,
-      message: "Successfully created contact!",
+      message: "Successfully created a contact!",
       data: newContact,
     });
   } catch (error) {
@@ -55,41 +62,37 @@ export const handleCreateContact = async (req, res, next) => {
   }
 };
 
-// PUT /contacts/:contactId
-export const handleUpdateContact = async (req, res, next) => {
+
+// PATCH /contacts/:contactId
+export const handlePatchContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const updatedContact = await updateContact(contactId, req.body);
+    const updatedContact = await patchContact(contactId, req.body);
 
     if (!updatedContact) {
-      return res.status(404).json({ message: 'Contact not found' });
+      throw createError(404, "Contact not found");
     }
 
     res.status(200).json({
       status: 200,
-      message: `Successfully updated contact with id ${contactId}!`,
+      message: "Successfully patched a contact!",
       data: updatedContact,
     });
   } catch (error) {
     next(error);
   }
 };
-
 // DELETE /contacts/:contactId
 export const handleDeleteContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const deletedContact = await deleteContact(contactId);
+    const deleted = await deleteContact(contactId);
 
-    if (!deletedContact) {
-      return res.status(404).json({ message: 'Contact not found' });
+    if (!deleted) {
+      throw createError(404, "Contact not found");
     }
 
-    res.status(200).json({
-      status: 200,
-      message: `Successfully deleted contact with id ${contactId}!`,
-      data: deletedContact,
-    });
+    res.status(204).send(); // без тіла
   } catch (error) {
     next(error);
   }
