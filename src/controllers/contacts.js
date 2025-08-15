@@ -5,7 +5,7 @@ import {
   patchContact,
   deleteContact,
 } from '../services/contacts.js';
-import createError from 'http-errors';
+import createError from "http-errors";
 
 // GET /contacts
 export const handleGetAllContacts = async (req, res, next) => {
@@ -42,24 +42,23 @@ export const handleGetContactById = async (req, res, next) => {
 };
 
 // POST /contacts
-export const handleCreateContact = async (req, res, next) => {
-  try {
-    const { name, phoneNumber, contactType } = req.body;
+export const handleCreateContact = async (req, res) => {
+  const { name, phoneNumber, contactType } = req.body;
 
-    if (!name || !phoneNumber || !contactType) {
-      throw createError(400, "Missing required fields: name, phoneNumber, contactType");
-    }
-
-    const newContact = await createContact(req.body);
-
-    res.status(201).json({
-      status: 201,
-      message: "Successfully created a contact!",
-      data: newContact,
-    });
-  } catch (error) {
-    next(error);
+  if (!name || !phoneNumber || !contactType) {
+    throw createError(
+      400,
+      "Missing required fields: name, phoneNumber, contactType"
+    );
   }
+
+  const newContact = await createContact(req.body);
+
+  res.status(201).json({
+    status: 201,
+    message: "Successfully created a contact!",
+    data: newContact, 
+  });
 };
 
 
@@ -92,7 +91,7 @@ export const handleDeleteContact = async (req, res, next) => {
       throw createError(404, "Contact not found");
     }
 
-    res.status(204).send(); // без тіла
+    res.status(204).send(); 
   } catch (error) {
     next(error);
   }

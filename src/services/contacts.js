@@ -10,7 +10,8 @@ export const getContactById = async (contactId) => {
 
 export const createContact = async (contactData) => {
   const contact = new Contact(contactData);
-  return await contact.save();
+  const savedContact = await contact.save();
+  return savedContact.toObject({ versionKey: false }); 
 };
 
 export const patchContact = async (contactId, updateData) => {
