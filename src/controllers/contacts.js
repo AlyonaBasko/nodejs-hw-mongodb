@@ -7,6 +7,7 @@ import {
 } from '../services/contacts.js';
 import createError from "http-errors";
 import { parsePaginationParams } from "../utils/parsePaginationParams.js";
+import { parseSortParams } from '../utils/parseSortParams.js';
 
 // GET /contacts
 export const handleGetAllContacts = async (req, res, next) => {
@@ -14,7 +15,7 @@ export const handleGetAllContacts = async (req, res, next) => {
     const { page, perPage } = parsePaginationParams(req.query);
 
     const contacts = await getAllContacts({ page, perPage });
-    
+
     res.status(200).json({
       status: 200,
       message: "Successfully found contacts!",
@@ -101,4 +102,21 @@ export const handleDeleteContact = async (req, res, next) => {
   }
 };
 
+
+export const getContactsController = async (req, res, next) => {
+  try {
+    const { page, perPage } = parsePaginationParams(req.query);
+    const { sortBy, sortOrder } = parseSortParams(req.query);
+
+    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully found contacts!',
+      data: contacts,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
 
