@@ -6,16 +6,13 @@ export const getAllContacts = async ({
   page = 1,
   perPage = 10,
   sortOrder = SORT_ORDER.ASC,
-  sortBy = '_id',
+  sortBy = "name",
 }) => {
   const skip = (page - 1) * perPage;
   const limit = perPage;
 
-  const contactsQuery = Contact.find();
-
-  const totalItems = await Contact.find()
-    .merge(contactsQuery)
-    .countDocuments();
+const contactsQuery = Contact.find();
+  const totalItems = await Contact.countDocuments();
 
   const contacts = await contactsQuery
     .skip(skip)

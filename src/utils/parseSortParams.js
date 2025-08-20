@@ -15,7 +15,7 @@ const parseSortBy = (sortBy) => {
     'updatedAt',
   ];
 
-  return keysOfContact.includes(sortBy) ? sortBy : '_id';
+  return keysOfContact.includes(sortBy) ? sortBy : "name";
 };
 
 export const parseSortParams = (query) => {
