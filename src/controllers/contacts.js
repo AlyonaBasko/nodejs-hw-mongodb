@@ -16,6 +16,7 @@ export const handleGetAllContacts = async (req, res, next) => {
     const { sortBy, sortOrder } = parseSortParams(req.query);
 
     const contacts = await getAllContacts({
+      userId: req.user._id,  
       page,
       perPage,
       sortBy,
@@ -36,7 +37,7 @@ export const handleGetAllContacts = async (req, res, next) => {
 export const handleGetContactById = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const contact = await getContactById(contactId);
+    const contact = await getContactById(contactId, req.user._id); 
 
     if (!contact) {
       throw createError(404, "Contact not found");
@@ -53,31 +54,37 @@ export const handleGetContactById = async (req, res, next) => {
 };
 
 // POST /contacts
-export const handleCreateContact = async (req, res) => {
-  const { name, phoneNumber, contactType } = req.body;
+export const handleCreateContact = async (req, res, next) => {
+  try {
+    const { name, phoneNumber, contactType } = req.body;
 
-  if (!name || !phoneNumber || !contactType) {
-    throw createError(
-      400,
-      "Missing required fields: name, phoneNumber, contactType"
-    );
+    if (!name || !phoneNumber || !contactType) {
+      throw createError(
+        400,
+        "Missing required fields: name, phoneNumber, contactType"
+      );
+    }
+
+    const newContact = await createContact({
+      ...req.body,
+      userId: req.user._id, 
+    });
+
+    res.status(201).json({
+      status: 201,
+      message: "Successfully created a contact!",
+      data: newContact,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  const newContact = await createContact(req.body);
-
-  res.status(201).json({
-    status: 201,
-    message: "Successfully created a contact!",
-    data: newContact, 
-  });
 };
-
 
 // PATCH /contacts/:contactId
 export const handlePatchContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const updatedContact = await patchContact(contactId, req.body);
+    const updatedContact = await patchContact(contactId, req.user._id, req.body); 
 
     if (!updatedContact) {
       throw createError(404, "Contact not found");
@@ -92,37 +99,19 @@ export const handlePatchContact = async (req, res, next) => {
     next(error);
   }
 };
+
 // DELETE /contacts/:contactId
 export const handleDeleteContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const deleted = await deleteContact(contactId);
+    const deleted = await deleteContact(contactId, req.user._id); 
 
     if (!deleted) {
       throw createError(404, "Contact not found");
     }
 
-    res.status(204).send(); 
+    res.status(204).send();
   } catch (error) {
     next(error);
   }
 };
-
-
-export const getContactsController = async (req, res, next) => {
-  try {
-    const { page, perPage } = parsePaginationParams(req.query);
-    const { sortBy, sortOrder } = parseSortParams(req.query);
-
-    const contacts = await getAllContacts({ page, perPage, sortBy, sortOrder });
-
-    res.status(200).json({
-      status: 200,
-      message: 'Successfully found contacts!',
-      data: contacts,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-

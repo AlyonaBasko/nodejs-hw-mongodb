@@ -5,9 +5,11 @@ import contactsRouter from "./routes/contacts.js";
 import { notFoundHandler } from "./middlewares/notFoundHandler.js";
 import { errorHandler } from "./middlewares/errorHandler.js";
 
+
 function setupServer() {
   const app = express();
   const PORT = process.env.PORT || 3000;
+
 
   app.use(cors());
   app.use(pino());
