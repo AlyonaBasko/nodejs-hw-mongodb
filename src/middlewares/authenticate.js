@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import createHttpError from "http-errors";
-import { UserCollection } from "../models/User.js";
+import { UserCollection } from "../models/user";
 
 const ACCESS_SECRET = process.env.ACCESS_SECRET || "access_secret_key";
 
