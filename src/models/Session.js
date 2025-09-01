@@ -1,31 +1,21 @@
 import { Schema, model } from "mongoose";
 
-const userSchema = new Schema(
+const sessionSchema = new Schema(
   {
-    name: {
-      type: String,
-      required: [true, "Name is required"],
-      minlength: 3,
-      maxlength: 20,
-      trim: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "users",
+      required: true,
     },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      lowercase: true,
-      match: [/^\S+@\S+\.\S+$/, "Please use a valid email address"],
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minlength: 6,
-    },
+    accessToken: { type: String, required: true },
+    refreshToken: { type: String, required: true },
+    accessTokenValidUntil: { type: Date, required: true },
+    refreshTokenValidUntil: { type: Date, required: true },
   },
   {
-    timestamps: true, // автоматично створює createdAt і updatedAt
+    timestamps: true,
     versionKey: false,
   }
 );
 
-export const UserCollection = model("users", userSchema);
+export const SessionCollection = model("sessions", sessionSchema);
