@@ -36,8 +36,8 @@ export const getContactById = async (contactId, userId) => {
 };
 
 
-export const createContact = async (contactData) => {
-  const contact = new Contact(contactData);
+export const createContact = async (contactData, userId) => {
+  const contact = new Contact({ ...contactData, userId });
   const savedContact = await contact.save();
   return savedContact.toObject({ versionKey: false });
 };
