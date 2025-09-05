@@ -26,7 +26,7 @@ router.post(
 
 router.post(
   "/logout",
-  logoutController
+  ctrlWrapper(logoutController)
 );
 
 export default router;

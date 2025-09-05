@@ -4,8 +4,8 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "start": "cross-env NODE_ENV=production node src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js"
   },
   "keywords": [],
   "author": "Alona Basko <alenabask93@gmail.com>",
@@ -14,6 +14,7 @@
   "devDependencies": {
     "@eslint/js": "^9.2.0",
     "@faker-js/faker": "^9.9.0",
+    "cross-env": "^10.0.0",
     "eslint": "^9.2.0",
     "globals": "^15.1.0",
     "nodemon": "^3.1.10"

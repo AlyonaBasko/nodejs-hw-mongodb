@@ -81,7 +81,7 @@ export const handleCreateContact = async (req, res, next) => {
 export const handlePatchContact = async (req, res, next) => {
   try {
     const { contactId } = req.params;
-    const updatedContact = await patchContact(contactId, req.body, req.user._id);
+    const updatedContact = await patchContact(contactId, req.user._id, req.body);
 
     if (!updatedContact) {
       throw createError(404, "Contact not found");

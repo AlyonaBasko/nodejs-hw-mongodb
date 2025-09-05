@@ -14,11 +14,12 @@ export const handleLogin = async (req, res) => {
   const { accessToken, refreshToken } = await authService.loginUser(req.body);
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+});
+
 
   res.json({
     status: 200,
@@ -33,11 +34,12 @@ export const handleRefresh = async (req, res) => {
   const { accessToken, refreshToken } = await authService.refreshSession(refreshTokenFromCookie);
 
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "strict",
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-  });
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict",
+  maxAge: 30 * 24 * 60 * 60 * 1000,
+});
+
 
   res.json({
     status: 200,
