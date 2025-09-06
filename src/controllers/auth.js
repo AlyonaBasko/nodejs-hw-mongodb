@@ -28,36 +28,49 @@ export const handleLogin = async (req, res) => {
   });
 };
 
-export const handleRefresh = async (req, res) => {
-  const refreshTokenFromCookie = req.cookies?.refreshToken;
+export const handleRefresh = async (req, res, next) => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) {
+      return res.status(401).json({ status: 401, message: "No refresh token provided" });
+    }
 
-  const { accessToken, refreshToken } = await authService.refreshSession(refreshTokenFromCookie);
+    const { accessToken, refreshToken: newRefreshToken } = await authService.refreshSession(refreshToken);
 
-  res.cookie("refreshToken", refreshToken, {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "strict",
-  maxAge: 30 * 24 * 60 * 60 * 1000,
-});
+    res.cookie("refreshToken", newRefreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
 
-
-  res.json({
-    status: 200,
-    message: "Successfully refreshed a session!",
-    data: { accessToken },
-  });
+    res.status(200).json({
+      status: 200,
+      message: "Successfully refreshed a session!",
+      data: { accessToken },
+    });
+  } catch (err) {
+    next(err);
+  }
 };
 
 
-export const logoutController = async (req, res, next) => {
+
+
+export const logoutUserController = async (req, res, next) => {
   try {
     const refreshToken = req.cookies?.refreshToken;
+    if (!refreshToken) return res.status(401).json({ status: 401, message: "No refresh token provided" });
+
     await authService.logoutUser(refreshToken);
 
-    
-    res.clearCookie("refreshToken");
+    res.clearCookie("refreshToken", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+    });
 
-    res.status(204).send(); 
+    res.status(204).send();
   } catch (err) {
     next(err);
   }

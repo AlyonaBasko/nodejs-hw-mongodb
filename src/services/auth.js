@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import bcrypt from "bcrypt";
 import createHttpError from "http-errors";
 import jwt from "jsonwebtoken";
@@ -15,6 +14,7 @@ export const registerUser = async ({ name, email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await UserCollection.create({ name, email, password: hashedPassword });
+  // eslint-disable-next-line no-unused-vars
   const { password: _, ...userData } = user.toObject();
   return userData;
 };
@@ -80,14 +80,7 @@ export const refreshSession = async (refreshTokenFromCookie) => {
 };
 
 export const logoutUser = async (refreshToken) => {
-  if (!refreshToken) {
-    throw createHttpError(401, "No refresh token provided");
-  }
+  if (!refreshToken) return; 
 
-  const session = await SessionCollection.findOne({ refreshToken });
-  if (!session) {
-    throw createHttpError(401, "Session not found");
-  }
-
-  await SessionCollection.deleteOne({ _id: session._id });
+  await SessionCollection.deleteOne({ refreshToken });
 };
